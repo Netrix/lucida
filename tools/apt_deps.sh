@@ -5,7 +5,7 @@
 
 apt-get update
 ln -s -f bash /bin/sh
-sudo ln -s /usr/bin/pip2 /usr/local/bin/pip
+ln -s /usr/bin/pip2 /usr/local/bin/pip
 apt-get install -y zlib1g-dev \
                    libatlas3-base \
                    python2.7-dev \
@@ -73,7 +73,8 @@ apt-get install -y zlib1g-dev \
                    vim \
                    memcached \
                    libyaml-dev \
-                   libffi-dev
+                   libffi-dev \
+				   python-virtualenv
 # pip install --upgrade distribute
 # pip install --upgrade pip
 # pip install -r python_requirements.txt

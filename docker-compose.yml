@@ -1,0 +1,33 @@
+version: '2'
+
+services:
+    base:
+        build:
+            context: .
+            dockerfile: docker/base/Dockerfile
+        image: lucida/base
+        entrypoint: echo 'base'
+
+    mongodb:
+        image: mongo:3.2
+        volumes:
+            - ./mongodb_data:/data
+        expose:
+            - "27017"
+
+    commandcenter:
+        depends_on:
+            - base
+        links:
+            - mongodb
+        build:
+            context: .
+            dockerfile: docker/commandcenter/Dockerfile
+        image: lucida/commandcenter
+        ports:
+            - 3000:3000
+        environment:
+            - MONGO_PORT_27017_TCP_ADDR=mongodb
+        entrypoint: /bin/bash -c "source /lucida/tools/python_2_7_9/bin/activate && python app.py"
+
+

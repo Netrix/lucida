@@ -20,20 +20,20 @@ if installCheck "$0"; then
 fi
 
 # MongoDB.
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
-echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
-sudo apt-get update
-sudo apt-get install -y mongodb-org
-sudo service mongod start
+#sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
+#echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
+#sudo apt-get update
+#sudo apt-get install -y mongodb-org
+#sudo service mongod start
 
 # C driver.
-sudo apt-get install git gcc automake autoconf libtool
+apt-get install git gcc automake autoconf libtool
 git clone https://github.com/mongodb/mongo-c-driver.git
 cd mongo-c-driver
 git checkout r1.3
 ./autogen.sh --prefix=/usr/local
 make
-sudo make install
+make install
 rm -rf .git
 cd ..
 
@@ -42,30 +42,30 @@ cd libbson/
 git checkout r1.3
 ./autogen.sh
 make
-sudo make install
+make install
 rm -rf .git
 cd ..
 
 # Upgrade CMake.
-sudo apt-get install -y software-properties-common
-sudo add-apt-repository -y ppa:george-edison55/cmake-3.x
-sudo apt-get -y update
-sudo apt-get install -y cmake
-sudo apt-get -y upgrade
+apt-get install -y software-properties-common
+add-apt-repository -y ppa:george-edison55/cmake-3.x
+apt-get -y update
+apt-get install -y cmake
+apt-get -y upgrade
 
 # C++ driver.
 git clone -b master https://github.com/mongodb/mongo-cxx-driver
 cd mongo-cxx-driver
 git checkout r3.0.0
 git checkout legacy
-sudo apt-get install scons
-sudo scons --prefix=/usr/local --c++11=on --ssl install
+apt-get install scons
+scons --prefix=/usr/local --c++11=on --ssl --disable-warnings-as-errors install
 rm -rf .git
 cd ..
 
-if installCheck "$0"; then
-  echo "MongoDB and C++ driver installed"; 
-  exit 0;
-else 
-  echo "Faile to install MongoDB and C++ driver"; 
-fi
+#if installCheck "$0"; then
+#  echo "MongoDB and C++ driver installed"; 
+#  exit 0;
+#else 
+#  echo "Faile to install MongoDB and C++ driver"; 
+#fi
