@@ -23,22 +23,19 @@ services:
             - questionanswering
             - imagematching
             - calendar
- #            - speechrecognition
+            - speech_recognition_master
         build:
             context: .
             dockerfile: docker/commandcenter/Dockerfile
         image: lucida/commandcenter
         ports:
             - 3000:3000
-            - 8081:8081
-        expose:
-            - "8081"
         environment:
             - MONGO_PORT_27017_TCP_ADDR=mongodb
             - QA_PORT_8083_TCP_ADDR=questionanswering
             - CA_PORT_8084_TCP_ADDR=calendar
             - IMM_PORT_8082_TCP_ADDR=imagematching
-#            - ASR_ADDR_PORT=speechrecognition
+#            - ASR_ADDR_PORT=localhost
         entrypoint: /bin/bash -c "source /lucida/tools/python_2_7_9/bin/activate && python app.py"
 
     imagematching:
@@ -75,16 +72,30 @@ services:
         image: lucida/calendar
         entrypoint: ./gradlew run
 
-    speechrecognition:
-        depends_on:
-            - base
-        links:
-            - commandcenter
+    speech_recognition_base:
         build:
             context: .
             dockerfile: docker/speechrecognition/Dockerfile
         image: lucida/speechrecognition
+        entrypoint: echo "sr_base"
+
+    speech_recognition_master:
+        depends_on:
+            - speech_recognition_base
+        image: lucida/speechrecognition
+        expose:
+            - "8081"
+        ports:
+            - "8081:8081"
+        entrypoint: /bin/bash -c "source /lucida/tools/python_2_7_9/bin/activate && python kaldigstserver/master_server.py --port=8081"
+
+    speechrecognition:
+        depends_on:
+            - speech_recognition_base
+        image: lucida/speechrecognition
+        links:
+            - speech_recognition_master
         environment:
             - GST_PLUGIN_PATH=/lucida/lucida/speechrecognition/kaldi_gstreamer_asr/kaldi/tools/gst-kaldi-nnet2-online/src
-        entrypoint: python kaldigstserver/worker.py -u ws://commancenter:8081/worker/ws/speech -c sample_english_nnet2.yaml
+        entrypoint: python kaldigstserver/worker.py -u ws://speech_recognition_master:8081/worker/ws/speech -c sample_english_nnet2.yaml
 
