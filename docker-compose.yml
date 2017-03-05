@@ -23,17 +23,22 @@ services:
             - questionanswering
             - imagematching
             - calendar
+ #            - speechrecognition
         build:
             context: .
             dockerfile: docker/commandcenter/Dockerfile
         image: lucida/commandcenter
         ports:
             - 3000:3000
+            - 8081:8081
+        expose:
+            - "8081"
         environment:
             - MONGO_PORT_27017_TCP_ADDR=mongodb
             - QA_PORT_8083_TCP_ADDR=questionanswering
             - CA_PORT_8084_TCP_ADDR=calendar
             - IMM_PORT_8082_TCP_ADDR=imagematching
+#            - ASR_ADDR_PORT=speechrecognition
         entrypoint: /bin/bash -c "source /lucida/tools/python_2_7_9/bin/activate && python app.py"
 
     imagematching:
@@ -69,3 +74,17 @@ services:
             dockerfile: docker/calendar/Dockerfile
         image: lucida/calendar
         entrypoint: ./gradlew run
+
+    speechrecognition:
+        depends_on:
+            - base
+        links:
+            - commandcenter
+        build:
+            context: .
+            dockerfile: docker/speechrecognition/Dockerfile
+        image: lucida/speechrecognition
+        environment:
+            - GST_PLUGIN_PATH=/lucida/lucida/speechrecognition/kaldi_gstreamer_asr/kaldi/tools/gst-kaldi-nnet2-online/src
+        entrypoint: python kaldigstserver/worker.py -u ws://commancenter:8081/worker/ws/speech -c sample_english_nnet2.yaml
+
