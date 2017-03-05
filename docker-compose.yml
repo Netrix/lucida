@@ -20,6 +20,7 @@ services:
             - base
         links:
             - mongodb
+            - questionanswering
         build:
             context: .
             dockerfile: docker/commandcenter/Dockerfile
@@ -28,6 +29,7 @@ services:
             - 3000:3000
         environment:
             - MONGO_PORT_27017_TCP_ADDR=mongodb
+            - QA_PORT_8083_TCP_ADDR=questionanswering
         entrypoint: /bin/bash -c "source /lucida/tools/python_2_7_9/bin/activate && python app.py"
 
     imagematching:
@@ -44,9 +46,14 @@ services:
     questionanswering:
         depends_on:
             - base
+            - mongodb
+        links:
+            - mongodb
         build:
             context: .
             dockerfile: docker/questionanswering/Dockerfile
         image: lucida/questionanswering
+        environment:
+            - MONGO_PORT_27017_TCP_ADDR=mongodb
         entrypoint: ./start_server.sh
 
