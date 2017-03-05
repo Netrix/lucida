@@ -41,3 +41,12 @@ services:
             - MONGO_PORT_27017_TCP_ADDR=mongodb
         entrypoint: ./opencv_imm/server/imm_server
 
+    questionanswering:
+        depends_on:
+            - base
+        build:
+            context: .
+            dockerfile: docker/questionanswering/Dockerfile
+        image: lucida/questionanswering
+        entrypoint: ./start_server.sh
+
