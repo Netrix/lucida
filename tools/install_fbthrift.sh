@@ -52,6 +52,7 @@ cd ..
 # rm -rf .git
 cd ..
 
+
 if installCheck "$0"; then
   echo "Facebook Thrift installed";
   exit 0;

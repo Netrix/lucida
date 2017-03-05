@@ -30,4 +30,14 @@ services:
             - MONGO_PORT_27017_TCP_ADDR=mongodb
         entrypoint: /bin/bash -c "source /lucida/tools/python_2_7_9/bin/activate && python app.py"
 
+    imagematching:
+        depends_on:
+            - base
+        build:
+            context: .
+            dockerfile: docker/imagematching/Dockerfile
+        image: lucida/imagematching
+        environment:
+            - MONGO_PORT_27017_TCP_ADDR=mongodb
+        entrypoint: ./opencv_imm/server/imm_server
 
