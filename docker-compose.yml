@@ -59,8 +59,11 @@ services:
             context: .
             dockerfile: docker/questionanswering/Dockerfile
         image: lucida/questionanswering
+        volumes:
+            - /media/sf_vbshared/wiki_indri_index:/lucida/wiki_indri_index
         environment:
             - MONGO_PORT_27017_TCP_ADDR=mongodb
+            - wiki_indri_index=/lucida/wiki_indri_index
         entrypoint: ./start_server.sh
 
     calendar:

@@ -13,6 +13,7 @@ WORKDIR /lucida/lucida/djinntonic
 RUN python -mthrift_compiler.main --gen cpp2 ../lucidaservice.thrift
 RUN python -mthrift_compiler.main --gen cpp2 ../lucidatypes.thrift
 
+WORKDIR /lucida/lucida/djinntonic/models
 RUN wget http://web.eecs.umich.edu/~jahausw/download/djinn-weights-1.0.tar.gz && tar xvzf djinn-weights-1.0.tar.gz && rm -rf djinn-weights-1.0.tar.gz;
 
 ENTRYPOINT echo djinntonic_base done
