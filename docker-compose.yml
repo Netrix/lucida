@@ -107,3 +107,29 @@ services:
             dockerfile: docker/djinntonic_base/Dockerfile
         image: lucida/djinntonic_base
 
+    djinntonic_imc:
+        depends_on:
+            - djinntonic_base
+        build:
+            context: .
+            dockerfile: docker/djinntonic_imc/Dockerfile
+        image: lucida/djinntonic_imc
+        entrypoint: /bin/bash -c "./IMCServer"
+
+    djinntonic_dig:
+        depends_on:
+            - djinntonic_base
+        build:
+            context: .
+            dockerfile: docker/djinntonic_dig/Dockerfile
+        image: lucida/djinntonic_dig
+        entrypoint: /bin/bash -c "./DIGServer"
+
+    djinntonic_face:
+        depends_on:
+            - djinntonic_base
+        build:
+            context: .
+            dockerfile: docker/djinntonic_face/Dockerfile
+        image: lucida/djinntonic_face
+        entrypoint: /bin/bash -c "./FACEServer"
