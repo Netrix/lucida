@@ -99,3 +99,11 @@ services:
             - GST_PLUGIN_PATH=/lucida/lucida/speechrecognition/kaldi_gstreamer_asr/kaldi/tools/gst-kaldi-nnet2-online/src
         entrypoint: python kaldigstserver/worker.py -u ws://speech_recognition_master:8081/worker/ws/speech -c sample_english_nnet2.yaml
 
+    djinntonic_base:
+        depends_on:
+            - base
+        build:
+            context: .
+            dockerfile: docker/djinntonic_base/Dockerfile
+        image: lucida/djinntonic_base
+
